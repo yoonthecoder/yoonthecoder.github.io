@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Yoon Kim — Design Engineer</title>
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --surface: #FFFFFF;
+    --ink: #141414;
+    --ink-2: #3A3A3A;
+    --muted: #6B6B6B;
+    --line: #E6E4DD;
+    --accent: #EAA703;
+    --accent-soft: #FCEFD4;
+    --accent-deep: #EAA703;
+    --warm: #FF6A3D;
+    --green: #1F8A5C;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --max: 1080px;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    font-size: 16px;
+  }
+  a { color: var(--accent-deep); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .15s; }
+  a:hover { border-bottom-color: var(--accent-deep); }
+  .container { max-width: var(--max); margin: 0 auto; padding: 0 32px; }
+
+  /* Header */
+  header.site {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; background: rgba(250,250,247,0.92);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+  }
+  header.site .row { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+  header.site .name { font-weight: 600; letter-spacing: -0.01em; display: flex; align-items: center; gap: 12px; }
+  header.site .name .logo { height: 26px; width: auto; display: block; }
+  header.site nav { display: flex; gap: 22px; font-size: 14px; color: var(--ink-2); }
+  header.site nav a { color: var(--ink-2); border: none; }
+  header.site nav a:hover { color: var(--accent-deep); }
+
+  /* Hero */
+  .hero { padding: 88px 0 64px; }
+  .hero .eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .hero h1 { font-size: 52px; line-height: 1.05; margin: 18px 0 22px; letter-spacing: -0.025em; font-weight: 600; max-width: 820px; }
+  .hero h1 em { font-style: normal; color: var(--accent-deep); }
+  .hero .lede { font-size: 19px; color: var(--ink-2); max-width: 680px; }
+  .hero .meta {
+    margin-top: 36px;
+    display: flex; gap: 28px; flex-wrap: wrap;
+    font-size: 14px; color: var(--muted);
+  }
+  .hero .meta span::before { content: "·"; margin-right: 10px; color: var(--line); }
+  .hero .meta span:first-child::before { content: none; }
+
+  /* Section heading */
+  section { padding: 72px 0; border-top: 1px solid var(--line); }
+  section.no-border { border-top: none; }
+  .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin-bottom: 40px; flex-wrap: wrap; }
+  .section-head h2 { font-size: 14px; font-family: var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin: 0; font-weight: 500; }
+  .section-head .lede { color: var(--ink-2); font-size: 17px; max-width: 540px; }
+
+  /* Case card — featured */
+  .case.featured {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .case.featured .head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+  .case.featured .head .num { font-family: var(--mono); font-size: 13px; color: var(--accent-deep); }
+  .case.featured .head .role { font-size: 13px; color: var(--muted); }
+  .case.featured h3 { font-size: 30px; line-height: 1.15; letter-spacing: -0.02em; margin: 12px 0 16px; font-weight: 600; }
+  .case.featured .summary { color: var(--ink-2); font-size: 16px; margin-bottom: 28px; }
+  .case.featured .blocks { display: grid; gap: 20px; }
+  .block { }
+  .block .label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .block .body { color: var(--ink); font-size: 15px; }
+
+  /* Metric pills */
+  .metrics { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
+  .metric {
+    display: inline-flex; flex-direction: column;
+    background: var(--accent-soft);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    min-width: 92px;
+  }
+  .metric .num { font-size: 22px; font-weight: 600; color: var(--accent-deep); letter-spacing: -0.02em; }
+  .metric .label-text { font-size: 11px; color: var(--ink-2); margin-top: 2px; }
+
+  /* Tech stack tags */
+  .stack { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 22px; }
+  .stack .chip {
+    font-family: var(--mono); font-size: 11px;
+    background: transparent; color: var(--ink-2);
+    border: 1px solid var(--line);
+    padding: 4px 9px; border-radius: 999px;
+  }
+
+  /* Visual area for case */
+  .case.featured .visual {
+    background: linear-gradient(180deg, #F5F4EE 0%, #EBEAE2 100%);
+    border-radius: 10px;
+    padding: 28px;
+    min-height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Atlas multi-brand schematic */
+  .atlas-schematic { width: 100%; }
+  .atlas-schematic .codebase {
+    background: var(--ink);
+    color: #F5F4EE;
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-family: var(--mono);
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  .atlas-schematic .codebase .file { color: #F6E08E; }
+  .atlas-schematic .codebase .keyword { color: #FFB36A; }
+  .atlas-schematic .codebase .string { color: #B8E6A0; }
+  .atlas-schematic .codebase .comment { color: #6B6B6B; }
+  .atlas-schematic .arrows {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+    margin: 8px 0;
+    text-align: center;
+  }
+  .atlas-schematic .arrows .arrow {
+    height: 28px;
+    border-left: 1px dashed var(--muted);
+    margin: 0 auto;
+    width: 1px;
+    position: relative;
+  }
+  .atlas-schematic .arrows .arrow::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: -3px;
+    width: 0; height: 0;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 5px solid var(--muted);
+  }
+  .atlas-schematic .brands {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+  }
+  .brand-card {
+    border-radius: 8px; padding: 14px; text-align: center;
+    font-size: 11px;
+    border: 1px solid;
+  }
+  .brand-card .name { font-weight: 600; margin-bottom: 8px; font-size: 12px; }
+  .brand-card .swatches { display: flex; gap: 4px; justify-content: center; }
+  .brand-card .swatches span { width: 14px; height: 14px; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.08); }
+  .brand-nba { background: #F7E8E2; border-color: #E8CFC2; color: #8A3520; }
+  .brand-nfl { background: #E8EEF7; border-color: #C8D6E8; color: #1E3A6B; }
+  .brand-pin { background: #EFE8F7; border-color: #D8C8E8; color: #4A2E78; }
+  .brand-nba .swatches span:nth-child(1) { background: #C84A2D; }
+  .brand-nba .swatches span:nth-child(2) { background: #1A1A1A; }
+  .brand-nba .swatches span:nth-child(3) { background: #F5F1E8; }
+  .brand-nfl .swatches span:nth-child(1) { background: #1E3A6B; }
+  .brand-nfl .swatches span:nth-child(2) { background: #4A8AC4; }
+  .brand-nfl .swatches span:nth-child(3) { background: #F5F4EE; }
+  .brand-pin .swatches span:nth-child(1) { background: #4A2E78; }
+  .brand-pin .swatches span:nth-child(2) { background: #A88AD0; }
+  .brand-pin .swatches span:nth-child(3) { background: #FAF6E8; }
+  .atlas-schematic .caption { font-size: 11px; color: var(--muted); text-align: center; margin-top: 14px; font-family: var(--mono); letter-spacing: 0.04em; }
+
+  /* Case grid (secondary) */
+  .case-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .case-mini {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .case-mini .head { display: flex; align-items: baseline; gap: 10px; }
+  .case-mini .head .num { font-family: var(--mono); font-size: 12px; color: var(--accent-deep); }
+  .case-mini .head .role { font-size: 12px; color: var(--muted); }
+  .case-mini h3 { font-size: 22px; letter-spacing: -0.015em; margin: 10px 0 12px; line-height: 1.2; font-weight: 600; }
+  .case-mini .summary { color: var(--ink-2); font-size: 14.5px; margin-bottom: 18px; }
+  .case-mini .visual {
+    background: #F5F4EE;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 18px;
+    min-height: 160px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .case-mini .visual.visual-img { padding: 0; overflow: hidden; min-height: 180px; background: #0A0E1A; }
+  .case-mini .visual.visual-img img { width: 100%; height: auto; display: block; }
+
+  /* XState round flow viz (NFL Kickoff) */
+  .xstate-flow { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; }
+  .xstate-node {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 6px 9px;
+    font-family: var(--mono); font-size: 10px;
+    text-align: center;
+    min-width: 56px;
+  }
+  .xstate-node.active { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+  .xstate-arrow {
+    width: 16px; height: 1px; background: var(--muted); position: relative;
+  }
+  .xstate-arrow::after {
+    content: ""; position: absolute; right: 0; top: -2px;
+    border-left: 4px solid var(--muted);
+    border-top: 2px solid transparent;
+    border-bottom: 2px solid transparent;
+  }
+
+  /* Leaderboard mock */
+  .leaderboard-mock { width: 100%; max-width: 220px; font-size: 11px; }
+  .leaderboard-mock .row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .leaderboard-mock .row:first-child { border-radius: 6px 6px 0 0; background: linear-gradient(90deg, #FFF7E0 0%, var(--surface) 70%); }
+  .leaderboard-mock .row:last-child { border-bottom: none; border-radius: 0 0 6px 6px; }
+  .leaderboard-mock .rank { font-family: var(--mono); color: var(--muted); width: 18px; }
+  .leaderboard-mock .rank.gold { color: #B88600; font-weight: 700; }
+  .leaderboard-mock .user { flex: 1; padding-left: 8px; }
+  .leaderboard-mock .pts { font-family: var(--mono); color: var(--ink-2); }
+  .leaderboard-mock .claim {
+    margin-top: 8px;
+    background: var(--ink); color: var(--surface);
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  /* Workflow pipeline */
+  .pipeline { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: center; }
+  .pipeline .step {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 11px;
+    text-align: center;
+    min-width: 70px;
+  }
+  .pipeline .step .ico { font-size: 18px; display: block; margin-bottom: 4px; }
+  .pipeline .step .label { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.05em; color: var(--muted); }
+  .pipeline .arrow {
+    width: 14px; height: 1px; background: var(--ink);
+    position: relative;
+  }
+  .pipeline .arrow::after {
+    content: ""; position: absolute; right: 0; top: -2.5px;
+    border-left: 5px solid var(--ink);
+    border-top: 2.5px solid transparent;
+    border-bottom: 2.5px solid transparent;
+  }
+
+  /* Design system tokens viz */
+  .tokens { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 100%; }
+  .token-group { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+  .token-group .title { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 8px; text-transform: uppercase; }
+  .swatch-row { display: flex; gap: 6px; }
+  .swatch-row span { width: 22px; height: 22px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.06); }
+  .type-scale { display: flex; align-items: baseline; gap: 8px; }
+  .type-scale span { color: var(--ink); }
+  .type-scale .t1 { font-size: 18px; font-weight: 600; }
+  .type-scale .t2 { font-size: 14px; }
+  .type-scale .t3 { font-size: 11px; color: var(--muted); }
+  .space-scale { display: flex; align-items: flex-end; gap: 4px; }
+  .space-scale div { background: var(--accent); border-radius: 2px; width: 8px; }
+  .space-scale div:nth-child(1) { height: 4px; }
+  .space-scale div:nth-child(2) { height: 8px; }
+  .space-scale div:nth-child(3) { height: 12px; }
+  .space-scale div:nth-child(4) { height: 18px; }
+  .space-scale div:nth-child(5) { height: 26px; }
+  .radii { display: flex; gap: 6px; }
+  .radii div { width: 26px; height: 22px; background: var(--accent-soft); border: 1px solid var(--accent); }
+  .radii div:nth-child(1) { border-radius: 0; }
+  .radii div:nth-child(2) { border-radius: 3px; }
+  .radii div:nth-child(3) { border-radius: 6px; }
+  .radii div:nth-child(4) { border-radius: 999px; }
+
+  /* Earlier work list */
+  .earlier { display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .earlier .row {
+    display: grid;
+    grid-template-columns: 80px 1.2fr 2fr 120px;
+    gap: 20px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .earlier .row .year { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .earlier .row .name { font-weight: 600; font-size: 16px; }
+  .earlier .row .name .role { color: var(--muted); font-weight: 400; font-size: 13px; display: block; margin-top: 2px; }
+  .earlier .row .desc { color: var(--ink-2); font-size: 14px; }
+  .earlier .row .tags { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+  .earlier .row .tags .chip {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--muted); border: 1px solid var(--line);
+    padding: 2px 6px; border-radius: 999px;
+  }
+
+  /* Tech stack grid */
+  .stack-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .stack-grid h4 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; font-weight: 500; }
+  .stack-grid ul { list-style: none; padding: 0; margin: 0; font-size: 14px; color: var(--ink-2); }
+  .stack-grid li { padding: 4px 0; }
+
+  /* Footer */
+  footer.site {
+    padding: 64px 0 80px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 14px;
+  }
+  footer.site .row { display: flex; justify-content: space-between; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+  footer.site h3 { font-size: 28px; color: var(--ink); margin: 0 0 12px; letter-spacing: -0.02em; font-weight: 600; }
+  footer.site .links { display: flex; gap: 18px; }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    .hero h1 { font-size: 38px; }
+    .hero { padding: 56px 0 40px; }
+    .case.featured { grid-template-columns: 1fr; padding: 28px; }
+    .case-grid { grid-template-columns: 1fr; }
+    .stack-grid { grid-template-columns: repeat(2, 1fr); }
+    .earlier .row { grid-template-columns: 60px 1fr; gap: 12px; }
+    .earlier .row .desc, .earlier .row .tags { grid-column: 2 / 3; }
+    section { padding: 56px 0; }
+    .container { padding: 0 22px; }
+    header.site nav { display: none; }
+  }
+
+  /* Print */
+  @media print {
+    header.site { position: static; }
+    section { page-break-inside: avoid; padding: 32px 0; }
+    .case.featured, .case-mini { break-inside: avoid; }
+    body { font-size: 11pt; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="container row">
+    <div class="name">
+      <svg class="logo" viewBox="0 0 74 98" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M21.2357 47.9842C14.5814 47.9842 9.37852 46.1197 5.62711 42.3905C1.8757 38.6614 0 33.3373 0 26.4183V5.45888C0 2.44402 2.42937 0 5.42615 0C8.42292 0 10.8523 2.44402 10.8523 5.45888V26.0139C10.8523 30.5068 11.7678 33.7417 13.5989 35.7186C15.4299 37.6955 17.9978 38.6839 21.3026 38.6839C24.6075 38.6839 27.1754 37.6955 29.0064 35.7186C30.8375 33.7417 31.753 30.5068 31.753 26.0139V5.39149C31.753 2.41385 34.1524 0 37.1122 0C40.0719 0 42.4713 2.41385 42.4713 5.39149V26.4183C42.4713 27.6221 42.4145 28.7777 42.301 29.885L42.4285 70.7104C43.1633 64.4104 45.8607 59.2051 50.1046 55.4695C54.9488 51.2055 61.4039 49.2055 68.2278 49.2103C70.7677 49.2121 72.8253 51.285 72.8235 53.8402C72.8217 56.3954 70.7612 58.4653 68.2213 58.4635C63.1276 58.4599 58.9856 59.9473 56.1612 62.4334C53.4084 64.8565 51.5094 68.5702 51.4254 73.9238C51.3559 78.7761 53.4188 82.3568 56.6175 84.8325C59.9325 87.3982 64.5674 88.8192 69.3289 88.744C71.8685 88.7039 73.9595 90.7425 73.9994 93.2974C74.0393 95.8523 72.0129 97.9559 69.4733 97.996C62.9521 98.099 56.2068 96.1895 51.009 92.1664C46.5467 88.7126 43.3052 83.7405 42.4497 77.497L42.4967 92.5354C42.5047 95.0906 40.4522 97.1685 37.9123 97.1765C35.3724 97.1846 33.307 95.1197 33.299 92.5645L33.1899 57.6455C33.1725 52.0812 26.7666 47.9842 21.2357 47.9842Z" fill="#EAA703"/>
+      </svg>
+      <span>Yoon Kim</span>
+    </div>
+    <nav>
+      <a href="#work">Work</a>
+      <a href="#earlier">Earlier</a>
+      <a href="#stack">Stack</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero no-border">
+  <div class="container">
+    <div class="eyebrow">Design Engineer · Vancouver, BC</div>
+    <h1>I build <em>end-to-end product experiences</em> — from design systems and Figma to production frontend.</h1>
+    <p class="lede">Five years shipping React, TypeScript, and Next.js across consumer apps and shared platform codebases. Early adopter of AI-native workflows — Claude Code, Figma MCP, sub-agents — to compress design-to-code without losing craft.</p>
+    <div class="meta">
+      <span>Currently at Dapper Labs</span>
+      <span>Open to Design Engineer roles</span>
+      <span>imyoonkim@gmail.com</span>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="container">
+    <div class="section-head">
+      <h2>Featured · 01</h2>
+      <p class="lede">A consolidated multi-brand frontend powering three production consumer apps off a single Next.js codebase.</p>
+    </div>
+
+    <div class="case featured">
+      <div>
+        <div class="head">
+          <span class="num">01</span>
+          <span class="role">Software Engineer · Dapper Labs · 2025 — Present</span>
+        </div>
+        <h3>Atlas — a multi-brand frontend platform for three consumer apps</h3>
+        <p class="summary">Atlas is the consolidated Next.js codebase that ships as NBA Top Shot, NFL All Day, and Disney Pinnacle. Environment variables at build time swap branding — theme, tokens, assets, copy — so one repo serves three differently-branded production apps. I own the shared user-profile surface and the design system underneath it.</p>
+
+        <div class="blocks">
+          <div class="block">
+            <div class="label">Problem</div>
+            <div class="body">Three consumer products share enough DNA — account, marketplace, transactions — that maintaining separate frontends multiplied effort and drift. We needed one platform that could ship three brands without losing per-product polish.</div>
+          </div>
+          <div class="block">
+            <div class="label">My work</div>
+            <div class="body">Led end-to-end build of the shared user profile / account surface used by all three apps. Architected the design system: 25+ accessible primitives on Tailwind, shadcn, and Radix, with theming wired to the env-driven token layer. Set up a Figma-MCP pipeline so designs flow into code without manual translation.</div>
+          </div>
+          <div class="block">
+            <div class="label">Outcome</div>
+            <div class="body">Design system adopted across 10+ feature areas, shipped into all three production apps. New-feature build time down ~40%. Task completion on the profile surface improved 35%.</div>
+          </div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric"><span class="num">3</span><span class="label-text">brands, 1 repo</span></div>
+          <div class="metric"><span class="num">25+</span><span class="label-text">primitives</span></div>
+          <div class="metric"><span class="num">40%</span><span class="label-text">faster builds</span></div>
+          <div class="metric"><span class="num">35%</span><span class="label-text">task time ↓</span></div>
+        </div>
+
+        <div class="stack">
+          <span class="chip">Next.js</span>
+          <span class="chip">TypeScript</span>
+          <span class="chip">Tailwind</span>
+          <span class="chip">shadcn/ui</span>
+          <span class="chip">Radix</span>
+          <span class="chip">Connect RPC</span>
+          <span class="chip">Auth0</span>
+          <span class="chip">Figma MCP</span>
+          <span class="chip">Playwright</span>
+          <span class="chip">Storybook</span>
+        </div>
+      </div>
+
+      <div class="visual">
+        <div class="atlas-schematic">
+          <div class="codebase">
+            <span class="comment">// atlas-app · single Next.js codebase</span><br/>
+            <span class="keyword">const</span> brand = <span class="file">process.env</span>.<span class="string">NEXT_PUBLIC_BRAND</span>;<br/>
+            <span class="keyword">import</span> tokens <span class="keyword">from</span> <span class="string">`./brands/${brand}`</span>;<br/>
+            <span class="keyword">export</span> <span class="keyword">default</span> &lt;<span class="file">App</span> theme={tokens} /&gt;;
+          </div>
+          <div class="arrows">
+            <div class="arrow"></div>
+            <div class="arrow"></div>
+            <div class="arrow"></div>
+          </div>
+          <div class="brands">
+            <div class="brand-card brand-nba">
+              <div class="name">NBA Top Shot</div>
+              <div class="swatches"><span></span><span></span><span></span></div>
+            </div>
+            <div class="brand-card brand-nfl">
+              <div class="name">NFL All Day</div>
+              <div class="swatches"><span></span><span></span><span></span></div>
+            </div>
+            <div class="brand-card brand-pin">
+              <div class="name">Disney Pinnacle</div>
+              <div class="swatches"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+          <div class="caption">env-driven branding · one codebase → three production apps</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <h2>Selected work · 02 — 04</h2>
+      <p class="lede">Live-service game UI, analytics surfaces, and the AI-native workflow that ties the whole system together.</p>
+    </div>
+
+    <div class="case-grid">
+      <!-- 02: NFL Kickoff / Playbook -->
+      <div class="case-mini">
+        <div class="head">
+          <span class="num">02</span>
+          <span class="role">NFL All Day · Live service · 2025</span>
+        </div>
+        <h3>Playbook — live prediction game suite</h3>
+        <div class="visual visual-img">
+          <img src="screenshots/nfl-allday-playbook.png" alt="NFL All Day Playbook game suite — Playbook, Pickem, and One & Done game modes with the live leaderboard and prize pool" />
+        </div>
+        <p class="summary">A live prediction game suite played each NFL gameweek — Playbook for stat picks, Pickem for matchup predictions, One & Done for single-player perf. Built the round lifecycle with an XState machine — picks open, live scoring, reward claim — wired to Apollo for real-time data and Chakra for the consumer surface.</p>
+        <div class="metrics">
+          <div class="metric"><span class="num">+20%</span><span class="label-text">weekly active</span></div>
+          <div class="metric"><span class="num">50k+</span><span class="label-text">sessions / season</span></div>
+        </div>
+        <div class="stack">
+          <span class="chip">Apollo GraphQL</span>
+          <span class="chip">XState</span>
+          <span class="chip">Chakra UI</span>
+          <span class="chip">Next.js</span>
+        </div>
+      </div>
+
+      <!-- 03: Leaderboards -->
+      <div class="case-mini">
+        <div class="head">
+          <span class="num">03</span>
+          <span class="role">NFL All Day · Analytics · 2025</span>
+        </div>
+        <h3>Leaderboards & Rewards</h3>
+        <div class="visual">
+          <div class="leaderboard-mock">
+            <div class="row"><span class="rank gold">1</span><span class="user">player_max</span><span class="pts">12,480</span></div>
+            <div class="row"><span class="rank">2</span><span class="user">jordan.eth</span><span class="pts">11,920</span></div>
+            <div class="row"><span class="rank">3</span><span class="user">tdfantasy</span><span class="pts">11,650</span></div>
+            <div class="row"><span class="rank">4</span><span class="user">you</span><span class="pts">9,200</span></div>
+            <div class="claim">Claim 240 reward →</div>
+          </div>
+        </div>
+        <p class="summary">Ranked standings, payout/claim flows, and seasonal events. Pushed hard on clarity — players had to know exactly where they stood and how to claim, with no ambiguity at the moment of reward.</p>
+        <div class="metrics">
+          <div class="metric"><span class="num">-30%</span><span class="label-text">support tickets</span></div>
+          <div class="metric"><span class="num">+25%</span><span class="label-text">claim rate</span></div>
+        </div>
+        <div class="stack">
+          <span class="chip">React</span>
+          <span class="chip">GraphQL</span>
+          <span class="chip">TypeScript</span>
+        </div>
+      </div>
+
+      <!-- 04: Figma MCP workflow -->
+      <div class="case-mini">
+        <div class="head">
+          <span class="num">04</span>
+          <span class="role">Atlas · Workflow · 2025 — Present</span>
+        </div>
+        <h3>Design-to-code with Figma MCP + Claude Code</h3>
+        <div class="visual">
+          <div class="pipeline">
+            <div class="step"><span class="ico">✦</span><span class="label">FIGMA</span></div>
+            <div class="arrow"></div>
+            <div class="step"><span class="ico">⌘</span><span class="label">MCP</span></div>
+            <div class="arrow"></div>
+            <div class="step"><span class="ico">◆</span><span class="label">CLAUDE</span></div>
+            <div class="arrow"></div>
+            <div class="step"><span class="ico">{ }</span><span class="label">CODE</span></div>
+          </div>
+        </div>
+        <p class="summary">Replaced manual token transcription with a pipeline: Claude pulls variable defs, layout, and Code Connect mappings from Figma via MCP, then generates components using our real tokens and existing primitives.</p>
+        <div class="metrics">
+          <div class="metric"><span class="num">2–4h → 30m</span><span class="label-text">per component</span></div>
+          <div class="metric"><span class="num">-30%</span><span class="label-text">PR cycle time</span></div>
+        </div>
+        <div class="stack">
+          <span class="chip">Figma MCP</span>
+          <span class="chip">Claude Code</span>
+          <span class="chip">Sub-agents</span>
+          <span class="chip">Code Connect</span>
+        </div>
+      </div>
+
+      <!-- 05: Design system tokens -->
+      <div class="case-mini">
+        <div class="head">
+          <span class="num">05</span>
+          <span class="role">Atlas · Design system · 2025 — Present</span>
+        </div>
+        <h3>Tokens, primitives, and brand-aware theming</h3>
+        <div class="visual">
+          <div class="tokens">
+            <div class="token-group">
+              <div class="title">Color</div>
+              <div class="swatch-row">
+                <span style="background:#EAA703"></span>
+                <span style="background:#1F8A5C"></span>
+                <span style="background:#FF6A3D"></span>
+                <span style="background:#F5F4EE"></span>
+              </div>
+            </div>
+            <div class="token-group">
+              <div class="title">Type</div>
+              <div class="type-scale">
+                <span class="t1">Aa</span><span class="t2">Aa</span><span class="t3">Aa</span>
+              </div>
+            </div>
+            <div class="token-group">
+              <div class="title">Space</div>
+              <div class="space-scale"><div></div><div></div><div></div><div></div><div></div></div>
+            </div>
+            <div class="token-group">
+              <div class="title">Radii</div>
+              <div class="radii"><div></div><div></div><div></div><div></div></div>
+            </div>
+          </div>
+        </div>
+        <p class="summary">25+ primitives — buttons, inputs, dialogs, navigation, data tables — built on Radix for accessibility, themed through env-aware tokens so the same component looks right under three brands.</p>
+        <div class="stack">
+          <span class="chip">Tailwind</span>
+          <span class="chip">shadcn/ui</span>
+          <span class="chip">Radix</span>
+          <span class="chip">Storybook</span>
+          <span class="chip">A11y</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="earlier">
+  <div class="container">
+    <div class="section-head">
+      <h2>Earlier work · 06 — 08</h2>
+      <p class="lede">Web3 docs sites, signup flows, NFT staking, hackathon wins — small-team variety where I learned to ship across the whole stack.</p>
+    </div>
+
+    <div class="earlier">
+      <div class="row">
+        <div class="year">2023–2025</div>
+        <div class="name">Turtle Design <span class="role">Frontend Developer</span></div>
+        <div class="desc">Built a Web3 developer documentation site on Next.js + Sanity with custom GROQ schemas and real-time previews. Plus a multi-step signup flow with React Hook Form + Jotai. <strong>−50% docs update time · −45% page load · +25% completion.</strong></div>
+        <div class="tags">
+          <span class="chip">Next.js</span><span class="chip">Sanity</span><span class="chip">Jotai</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="year">2021–2023</div>
+        <div class="name">BalloonBox <span class="role">Software Developer</span></div>
+        <div class="desc">Built 20+ accessible UI components for a forest-products trading app on Next.js + Prisma + Postgres. Shipped a reusable Web3 utility module (wallet connect, signing, contracts) and architected an NFT staking platform with real-time reward tracking via ethers.js.</div>
+        <div class="tags">
+          <span class="chip">Next.js</span><span class="chip">Prisma</span><span class="chip">ethers.js</span><span class="chip">Web3.js</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="year">2022</div>
+        <div class="name">ScoreBox <span class="role">Hackathon · ETH San Francisco</span></div>
+        <div class="desc">Credit-scoring dApp that analyzes crypto transaction histories and stores scores on two blockchains. <strong>Won Best Use of NEAR Protocol & Covalent</strong> at the largest Web3 hackathon.</div>
+        <div class="tags">
+          <span class="chip">Next.js</span><span class="chip">NEAR</span><span class="chip">Covalent</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="container">
+    <div class="section-head">
+      <h2>Stack</h2>
+      <p class="lede">What I reach for by default, and what I've shipped in production.</p>
+    </div>
+    <div class="stack-grid">
+      <div>
+        <h4>Frontend</h4>
+        <ul>
+          <li>React · Next.js</li>
+          <li>TypeScript</li>
+          <li>Tailwind · shadcn/ui · Radix</li>
+          <li>Chakra UI · Storybook</li>
+          <li>XState · Apollo · TanStack Query</li>
+          <li>Jotai · Redux</li>
+        </ul>
+      </div>
+      <div>
+        <h4>AI / Agentic</h4>
+        <ul>
+          <li>Claude Code</li>
+          <li>MCP (Model Context Protocol)</li>
+          <li>Figma MCP</li>
+          <li>Cursor</li>
+          <li>Sub-agents · skill-based automation</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Design & Quality</h4>
+        <ul>
+          <li>Figma · Code Connect</li>
+          <li>Playwright · Vitest · Jest · RTL</li>
+          <li>MSW · Cypress</li>
+          <li>LaunchDarkly · Sentry</li>
+          <li>GitHub Actions (CI/CD)</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Adjacent</h4>
+        <ul>
+          <li>Node · Connect RPC · GraphQL · REST</li>
+          <li>Prisma · Contentful · Sanity</li>
+          <li>Auth0 (middleware, RBAC)</li>
+          <li>Web3.js · ethers.js · Flow/FCL</li>
+          <li>Vue.js · PHP · Webflow</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site" id="contact">
+  <div class="container row">
+    <div>
+      <h3>Let's talk.</h3>
+      <div>I'm most excited about zero-to-one platform work with AI-native foundations.</div>
+    </div>
+    <div class="links">
+      <a href="mailto:imyoonkim@gmail.com">imyoonkim@gmail.com</a>
+      <a href="https://linkedin.com/in/imyoonkim">LinkedIn</a>
+      <a href="https://github.com/yoonthecoder">GitHub</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
